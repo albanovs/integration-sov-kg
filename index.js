@@ -26,7 +26,6 @@ const storage = multer.diskStorage({
         const baseName = path.basename(originalName, extname);
         cb(null, baseName + '-' + uniqueSuffix + extname);
     },
-
 });
 
 const upload = multer({ storage });
@@ -134,68 +133,83 @@ app.post('/api/saveFormData', async (req, res) => {
     }
 });
 
-app.put('/visa/update/:id', async (req, res) => {
+app.post('/api/localsaveFormData', upload.fields([{ name: 'photo' }, { name: 'additionalFiles' }]), async (req, res) => {
     try {
-        const { id } = req.params;
+        const { body, files } = req;
+        const photo = req.files.photo ? req.files.photo[0].filename : null;
+        const additionalFiles = files['additionalFiles']
+            ? files['additionalFiles'].map((file) => ({ file: file.path }))
+            : [];
         const {
-            permit_country,
-            permit_type,
-            permit_srok,
-            permit_doc_nom,
-            permit_docstart,
-            permit_docend,
-            permit_doctype,
-            permit_lname,
-            permit_fname,
-            permit_bdate,
-            permit_gender,
-            permit_pin,
-            permit_email,
-            permit_education,
-            permit_famstatus,
-            permit_address,
-            permit_planned_entry,
-            permit_planned_exit,
-            permit_position,
-            permit_region,
-        } = req.body;
-        const updateFields = {
-            permit_country,
-            permit_type,
-            permit_srok,
-            permit_doc_nom,
-            permit_docstart,
-            permit_docend,
-            permit_doctype,
-            permit_lname,
-            permit_fname,
-            permit_bdate,
-            permit_gender,
-            permit_pin,
-            permit_email,
-            permit_education,
-            permit_famstatus,
-            permit_address,
-            permit_planned_entry,
-            permit_planned_exit,
-            permit_position,
-            permit_region
-        };
-        const updatedVisa = await SaveFromVisa.findByIdAndUpdate(id, updateFields, {
-            new: true,
+            permit_country, permit_type, permit_srok, permit_doc_nom, permit_docstart, permit_docend,
+            permit_doctype, permit_lname, permit_fname, permit_bdate, permit_gender, permit_pin,
+            permit_email, permit_education, permit_famstatus, permit_address, permit_planned_entry,
+            permit_planned_exit, permit_position, permit_region
+        } = body;
+
+        const formData = new FormModel({
+            formData: {
+                photo,
+                permit_country, permit_type, permit_srok, permit_doc_nom, permit_docstart, permit_docend,
+                permit_doctype, permit_lname, permit_fname, permit_bdate, permit_gender, permit_pin,
+                permit_email, permit_education, permit_famstatus, permit_address, permit_planned_entry,
+                permit_planned_exit, permit_position, permit_region
+            },
+            files: additionalFiles
         });
-
-        if (!updatedVisa) {
-            return res.status(404).json({ message: 'Виза не найдена' });
-        }
-
-        res.status(200).json({
-            message: 'Данные успешно обновлены',
-            data: updatedVisa,
+        await formData.save();
+        res.status(201).json({
+            message: 'Данные успешно сохранены!',
+            formData
         });
     } catch (error) {
-        console.error(error);
+        console.error('Ошибка при сохранении данных:', error);
+        res.status(500).json({
+            message: 'Ошибка на сервере',
+            error
+        });
+    }
+});
+
+app.patch('/visa/update/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { formData } = req.body;
+        if (!formData || typeof formData !== 'object') {
+            return res.status(400).json({ message: 'Поле formData обязательно и должно быть объектом' });
+        }
+        const updatedDocument = await FormModel.findByIdAndUpdate(
+            id,
+            { $set: { formData } },
+            {
+                new: true,
+                runValidators: true,
+            }
+        );
+        if (!updatedDocument) {
+            return res.status(404).json({ message: 'Документ не найден' });
+        }
+        res.status(200).json({
+            message: 'Данные formData успешно обновлены',
+            data: updatedDocument,
+        });
+    } catch (error) {
+        console.error('Ошибка при обновлении данных:', error);
         res.status(500).json({ message: 'Ошибка при обновлении данных', error });
+    }
+});
+
+app.delete('/visa/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const deletedDocument = await FormModel.findByIdAndDelete(id);
+        if (!deletedDocument) {
+            return res.status(404).json({ message: 'Документ не найден' });
+        }
+        res.status(200).json({ message: 'Документ успешно удален' });
+    } catch (error) {
+        console.error('Ошибка при удалении данных:', error);
+        res.status(500).json({ message: 'Ошибка при удалении данных', error });
     }
 });
 
@@ -204,20 +218,16 @@ app.post('/api/uploadFiles', upload.array('files', 10), async (req, res) => {
         const files = req.files.map((file) => ({
             file: file.filename,
         }));
-
         const formdata = await SaveFromVisa.findOne();
         const newForm = new FormModel({ formData: formdata || {}, files });
-
         await newForm.save();
         await SaveFromVisa.deleteMany();
-
         res.status(200).json({ message: 'Файлы успешно сохранены, данные удалены', files });
     } catch (error) {
         console.error('Ошибка сохранения файлов:', error);
         res.status(500).json({ message: 'Ошибка сохранения файлов', error });
     }
 });
-
 
 app.get('/api/getworkvisa', async (req, res) => {
     try {
@@ -238,7 +248,6 @@ app.get('/api/getSavedFormData', async (req, res) => {
         res.status(500).json({ message: 'Failed to fetch saved form data' });
     }
 });
-
 
 app.use('/uploads', express.static('uploads'));
 
