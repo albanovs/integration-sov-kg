@@ -4,7 +4,6 @@ import cors from 'cors';
 import bodyParser from 'body-parser'
 import work_visa from './src/router/work_visa/work_visa.mjs';
 
-
 const app = express();
 app.use(cors());
 const PORT = '5000';

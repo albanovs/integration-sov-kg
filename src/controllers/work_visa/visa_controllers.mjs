@@ -33,7 +33,14 @@ const saveFormData = async (req, res) => {
 
     const formatedDate = {
         photo: null,
-        permit_country: mapValue(permit_country, { "103": "Индия" }, "Другая страна"),
+        permit_country: mapValue(permit_country, {
+            "103": "Индия",
+            "19": "Бангладеш",
+            "58": "Хорватия",
+            "183": "Россия",
+            "197": "Сербия",
+
+        }, "Другая страна"),
         permit_type: mapValue(permit_type, { "1": "Обычное единое разрешение" }, "Единое разрешение для виз категории F, Rl, M, I"),
         permit_srok: mapValue(permit_srok, { "1": "60 дней", "2": "360 дней" }),
         permit_doc_nom,

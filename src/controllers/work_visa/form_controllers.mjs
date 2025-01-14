@@ -139,7 +139,8 @@ const saveFiles = async (req, res) => {
             file: file.filename,
         }));
         const formdata = await SaveFromVisa.findOne();
-        const newForm = new FormModel({ formData: formdata || {}, files });
+        const date = new Date();
+        const newForm = new FormModel({ data: date, formData: formdata || {}, files });
         await newForm.save();
         await SaveFromVisa.deleteMany();
         res.status(200).json({ message: 'Файлы успешно сохранены, данные удалены', files });
