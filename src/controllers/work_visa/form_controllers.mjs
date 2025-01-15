@@ -37,7 +37,7 @@ const localsaveFormData = async (req, res) => {
 
             }, "Другая страна"),
             permit_type: mapValue(permit_type, { "1": "Обычное единое разрешение" }, "Единое разрешение для виз категории F, Rl, M, I"),
-            permit_srok: mapValue(permit_srok, { "1": "60 дней", "2": "360 дней" }),
+            permit_srok: mapValue(permit_srok, { "1": "60 дней" }, "360 дней"),
             permit_doc_nom,
             permit_docstart: permit_docstart,
             permit_docend: permit_docend,
