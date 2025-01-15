@@ -1,11 +1,16 @@
 import express from "express";
 import multer from "multer";
 import path from "path";
+import fs from "fs";
 
 const router = express.Router();
 
 import localform_controller from "../../controllers/work_visa/form_controllers.mjs";
 import { saveFormData as saveVisaFormData, getSavedFormData as getSavedVisaFormData } from "../../controllers/work_visa/visa_controllers.mjs";
+
+if (!fs.existsSync('./uploads')) {
+    fs.mkdirSync('./uploads');
+}
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -28,7 +33,7 @@ router.get('/api/getSavedFormData', getSavedVisaFormData);
 router.post('/api/localsaveFormData', upload.fields([{ name: 'photo' }, { name: 'additionalFiles' }]), localform_controller.localsaveFormData);
 router.patch('/visa/update/:id', localform_controller.updateLocalFormData)
 router.delete('/visa/:id', localform_controller.deleteLocalFormData)
-router.post('/api/uploadFiles', upload.array('files', 10), localform_controller.saveFiles);
+router.post('/api/uploadFiles', upload.array('files', 20), localform_controller.saveFiles);
 router.get('/api/getworkvisa', localform_controller.getLocalFormData);
 
 export default router;

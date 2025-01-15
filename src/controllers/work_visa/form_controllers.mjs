@@ -154,8 +154,8 @@ const saveFiles = async (req, res) => {
         await SaveFromVisa.deleteMany();
         res.status(200).json({ message: 'Файлы успешно сохранены, данные удалены', files });
     } catch (error) {
-        console.error('Ошибка сохранения файлов:', error);
-        res.status(500).json({ message: 'Ошибка сохранения файлов', error });
+        console.error('Ошибка сохранения файлов:', error.message, error.stack);
+        res.status(500).json({ message: 'Ошибка сохранения файлов', error: error.message });
     }
 }
 
