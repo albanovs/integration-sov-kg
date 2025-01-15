@@ -17,13 +17,13 @@ const storage = multer.diskStorage({
         cb(null, './uploads');
     },
     filename: (req, file, cb) => {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-        const originalName = file.originalname;
-        const extname = path.extname(originalName);
-        const baseName = path.basename(originalName, extname);
-        cb(null, baseName + '-' + uniqueSuffix + extname);
+        const date = new Date().toISOString().slice(0, 10);  // Только дата (например: 2025-01-15)
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);  // Уникальный суффикс
+        const extname = path.extname(file.originalname);  // Расширение файла
+        cb(null, `${date}-${uniqueSuffix}${extname}`);
     },
 });
+
 
 const upload = multer({ storage });
 

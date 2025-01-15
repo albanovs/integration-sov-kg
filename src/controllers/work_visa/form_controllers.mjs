@@ -3,19 +3,19 @@ import SaveFromVisa from "../../models/save_from_data.mjs";
 import path from "path";
 import crypto from "crypto";
 
-const shortenFileName = (filename) => {
-    const ext = path.extname(filename);
-    const baseName = path.basename(filename, ext);
-    const hash = crypto.createHash('md5').update(baseName).digest('hex').slice(0, 8);
-    return `${baseName.slice(0, 5)}_${hash}${ext}`;
-};
+// const shortenFileName = (filename) => {
+//     const ext = path.extname(filename);
+//     const baseName = path.basename(filename, ext);
+//     const hash = crypto.createHash('md5').update(baseName).digest('hex').slice(0, 8);
+//     return `${baseName.slice(0, 10)}_${hash}${ext}`;
+// };
 const localsaveFormData = async (req, res) => {
     try {
         const { body, files } = req;
-        const photo = req.files.photo ? shortenFileName(req.files.photo[0].filename) : null;
+        const photo = req.files.photo ? req.files.photo[0].filename : null;
 
         const additionalFiles = files['additionalFiles']
-            ? files['additionalFiles'].map((file) => ({ file: shortenFileName(file.filename) }))
+            ? files['additionalFiles'].map((file) => ({ file: file.filename }))
             : [];
         const {
             permit_country, permit_type, permit_srok, permit_doc_nom, permit_docstart, permit_docend,
@@ -146,7 +146,7 @@ const deleteLocalFormData = async (req, res) => {
 const saveFiles = async (req, res) => {
     try {
         const files = req.files.map((file) => ({
-            file: shortenFileName(file.filename),
+            file: file.filename,
         }));
         const formdata = await SaveFromVisa.findOne();
         const date = new Date();
