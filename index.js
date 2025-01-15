@@ -3,6 +3,7 @@ import { connect } from './db.js';
 import cors from 'cors';
 import bodyParser from 'body-parser'
 import work_visa from './src/router/work_visa/work_visa.mjs';
+import LoginModel from './src/models/login.mjs';
 
 const app = express();
 app.use(cors());
@@ -13,6 +14,19 @@ app.use(bodyParser.json());
 
 app.use('/', work_visa);
 app.use('/uploads', express.static('uploads'));
+app.post('/api/login', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        const isUser = await LoginModel.findOne({ email, password });
+        if (isUser) {
+            res.status(200).json({ message: 'Вход выполнен успешно' });
+        } else {
+            res.status(401).json({ message: 'Неверный логин или пароль' });
+        }
+    } catch (error) {
+
+    }
+})
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
