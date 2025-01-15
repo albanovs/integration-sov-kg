@@ -157,7 +157,7 @@ const saveFiles = async (req, res) => {
         console.error('Ошибка сохранения файлов:', error);
         res.status(500).json({ message: 'Ошибка сохранения файлов', error });
     }
-};
+}
 
 const getLocalFormData = async (req, res) => {
     try {
