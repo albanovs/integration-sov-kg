@@ -1,21 +1,13 @@
 import FormModel from "../../models/form_model.mjs";
 import SaveFromVisa from "../../models/save_from_data.mjs";
-import path from "path";
-import crypto from "crypto";
 
-// const shortenFileName = (filename) => {
-//     const ext = path.extname(filename);
-//     const baseName = path.basename(filename, ext);
-//     const hash = crypto.createHash('md5').update(baseName).digest('hex').slice(0, 8);
-//     return `${baseName.slice(0, 10)}_${hash}${ext}`;
-// };
 const localsaveFormData = async (req, res) => {
     try {
         const { body, files } = req;
-        const photo = req.files.photo ? req.files.photo[0].filename : null;
+        const photo = req.files.photo ? req.files.photo[0].location : null;
 
         const additionalFiles = files['additionalFiles']
-            ? files['additionalFiles'].map((file) => ({ file: file.filename }))
+            ? files['additionalFiles'].map((file) => ({ file: file.location }))
             : [];
         const {
             permit_country, permit_type, permit_srok, permit_doc_nom, permit_docstart, permit_docend,
@@ -145,12 +137,21 @@ const deleteLocalFormData = async (req, res) => {
 
 const saveFiles = async (req, res) => {
     try {
-        const files = req.files.map((file) => ({
-            file: file.filename,
-        }));
+        const files = req.files.map((file, index) => {
+            if (index === 0) {
+                return { photo: file.location };
+            }
+            return { file: file.location };
+        });
         const formdata = await SaveFromVisa.findOne();
         const date = new Date();
-        const newForm = new FormModel({ data: date, formData: formdata || {}, files });
+        const photo = files.find(file => file.photo)?.photo;
+        const otherFiles = files.filter(file => file.file).map(file => file.file);
+        const newForm = new FormModel({
+            data: date,
+            formData: { ...formdata, photo },
+            files: otherFiles,
+        });
         await newForm.save();
         await SaveFromVisa.deleteMany();
         res.status(200).json({ message: 'Файлы успешно сохранены, данные удалены', files });

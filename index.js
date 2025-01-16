@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(bodyParser.json());
 
 app.use('/', work_visa);
-app.use('/uploads', express.static('uploads'));
+// app.use('/uploads', express.static('uploads'));
 app.post('/api/login', async (req, res) => {
     try {
         const { email, password } = req.body;

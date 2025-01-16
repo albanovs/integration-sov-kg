@@ -39,7 +39,6 @@ const saveFormData = async (req, res) => {
             "58": "Хорватия",
             "183": "Россия",
             "197": "Сербия",
-
         }, "Другая страна"),
         permit_type: mapValue(permit_type, { "1": "Обычное единое разрешение" }, "Единое разрешение для виз категории F, Rl, M, I"),
         permit_srok: mapValue(permit_srok, { "1": "60 дней", }, "360 дней"),
