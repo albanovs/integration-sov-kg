@@ -32,7 +32,6 @@ const upload = multer({
 
 router.post('/api/saveFormData', saveVisaFormData);
 router.get('/api/getSavedFormData', getSavedVisaFormData);
-
 router.post('/api/localsaveFormData', upload.fields([{ name: 'photo' }, { name: 'additionalFiles' }]), localform_controller.localsaveFormData);
 router.patch('/visa/update/:id', localform_controller.updateLocalFormData)
 router.delete('/visa/:id', localform_controller.deleteLocalFormData)
