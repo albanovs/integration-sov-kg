@@ -147,7 +147,9 @@ const saveFiles = async (req, res) => {
         const formdata = await SaveFromVisa.findOne();
         const date = new Date();
         const photo = files.find(file => file.photo)?.photo;
-        const otherFiles = files.filter(file => file.file).map(file => file.file);
+        const otherFiles = files
+            .filter(file => file.file)
+            .map(file => ({ file: file.file }));
         const newForm = new FormModel({
             data: date,
             formData: { ...formdata, photo },
