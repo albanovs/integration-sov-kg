@@ -62,6 +62,7 @@ const localsaveFormData = async (req, res) => {
             permit_planned_entry: permit_planned_entry,
             permit_planned_exit: permit_planned_exit,
             permit_position,
+            permit_address,
             permit_region: mapValue(permit_region, {
                 "1": "г.Бишкек",
                 "2": "г.Ош",
