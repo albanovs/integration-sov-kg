@@ -42,7 +42,7 @@ const saveFormData = async (req, res) => {
         });
 
         await newFormData.save();
-        await sendToTelegram(name, phone, from, postamat);
+        await sendToTelegram(name, phone, from, detail, postamat);
         res.status(201).json({ message: 'Данные успешно сохранены и отправлены в Telegram!' });
     } catch (error) {
         console.error('Ошибка при сохранении данных:', error);
