@@ -4,6 +4,7 @@ import cors from 'cors';
 import bodyParser from 'body-parser'
 import work_visa from './src/router/work_visa/work_visa.mjs';
 import LoginModel from './src/models/login.mjs';
+import ArchaPointForm from './src/router/archa_point/archa_point_form.mjs';
 
 const app = express();
 app.use(cors());
@@ -13,6 +14,7 @@ app.use(express.json());
 app.use(bodyParser.json());
 
 app.use('/', work_visa);
+app.use('/', ArchaPointForm);
 // app.use('/uploads', express.static('uploads'));
 app.post('/api/login', async (req, res) => {
     try {
