@@ -1,7 +1,7 @@
 import axios from 'axios';
 import ArchaPointForm from "../../models/archa_point_form.mjs";
 
-const sendToTelegram = async (name, phone, from, postamat) => {
+const sendToTelegram = async (name, phone, from, detail, postamat) => {
     const date = new Date();
     const formattedDate = date.toLocaleString();
     const telegramBotToken = '7353979355:AAEANOLa4VLA399--RQ0R5vwZPL_NOveIj4';
@@ -12,6 +12,7 @@ const sendToTelegram = async (name, phone, from, postamat) => {
 Имя клиента: ${name}
 Номер клиента: ${phone}
 Забрать посылку с адреса: ${from}
+Описание посылки: ${detail}
 Доставить в постамат: ${postamat}
     `;
 
@@ -27,7 +28,7 @@ const sendToTelegram = async (name, phone, from, postamat) => {
 
 const saveFormData = async (req, res) => {
     try {
-        const { name, phone, from, postamat } = req.body;
+        const { name, phone, from, postamat, detail } = req.body;
         const date = new Date().toISOString().slice(0, 10);
         const time = new Date().toLocaleTimeString();
         const newFormData = new ArchaPointForm({
@@ -36,7 +37,8 @@ const saveFormData = async (req, res) => {
             from,
             postamat,
             date,
-            time
+            time,
+            detail
         });
 
         await newFormData.save();

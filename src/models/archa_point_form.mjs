@@ -5,7 +5,9 @@ const saveSchema = new mongoose.Schema({
     phone: String,
     from: String,
     postamat: String,
-    date: String
+    detail: String,
+    date: String,
+    time: String
 });
 
 const ArchaPointForm = mongoose.model("archa-point-form", saveSchema);
