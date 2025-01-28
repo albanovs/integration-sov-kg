@@ -28,7 +28,7 @@ const sendToTelegram = async (name, phone, from, detail, postamat) => {
 
 const saveFormData = async (req, res) => {
     try {
-        const { name, phone, from, postamat, detail } = req.body;
+        const { name, phone, from, detail, postamat } = req.body;
         const date = new Date().toISOString().slice(0, 10);
         const time = new Date().toLocaleTimeString();
         const newFormData = new ArchaPointForm({
@@ -36,9 +36,9 @@ const saveFormData = async (req, res) => {
             phone,
             from,
             postamat,
+            detail,
             date,
             time,
-            detail
         });
 
         await newFormData.save();
