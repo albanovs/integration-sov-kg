@@ -1,7 +1,7 @@
 import axios from 'axios';
-import ArchaPointForm from "../../models/archa_point_form.mjs";
+import ArchaPointForm2 from "../../models/archa_point_form2.mjs";
 
-const sendToTelegram = async (name, phone, from, detail, postamat) => {
+const sendToTelegram = async (name, phone, recipient_number, detail, postamat) => {
     const date = new Date();
     const formattedDate = date.toLocaleString();
     const telegramBotToken = '8016391332:AAFvLv3Rd7EiPL7nC16MVpn3UlT3OSkb_wM';
@@ -11,9 +11,9 @@ const sendToTelegram = async (name, phone, from, detail, postamat) => {
 Дата и время: ${formattedDate}
 Имя клиента: ${name}
 Номер клиента: ${phone}
-Забрать посылку с адреса: ${from}
+Номер получателя: ${recipient_number}
 Описание посылки: ${detail}
-Доставить в постамат: ${postamat}
+Постамат: ${postamat}
     `;
 
     try {
@@ -28,13 +28,17 @@ const sendToTelegram = async (name, phone, from, detail, postamat) => {
 
 const saveFormData = async (req, res) => {
     try {
-        const { name, phone, from, detail, postamat } = req.body;
+        const { body, files } = req;
+        const additionalFiles = files['additionalFiles'] ? files['additionalFiles'].map(file => ({ file: file.location })) : [];
+        const { name, phone, recipient_number, detail, postamat, confidentiality_condition } = body;
         const date = new Date().toISOString().slice(0, 10);
         const time = new Date().toLocaleTimeString();
-        const newFormData = new ArchaPointForm({
+        const newFormData = new ArchaPointForm2({
             name,
             phone,
-            from,
+            recipient_number,
+            additionalFiles,
+            confidentiality_condition,
             postamat,
             detail,
             date,
@@ -42,7 +46,7 @@ const saveFormData = async (req, res) => {
         });
 
         await newFormData.save();
-        await sendToTelegram(name, phone, from, detail, postamat);
+        await sendToTelegram(name, phone, recipient_number, detail, postamat);
         res.status(201).json({ message: 'Данные успешно сохранены и отправлены в Telegram!' });
     } catch (error) {
         console.error('Ошибка при сохранении данных:', error);
@@ -52,7 +56,7 @@ const saveFormData = async (req, res) => {
 
 const getSavedFormData = async (req, res) => {
     try {
-        const savedFormData = await ArchaPointForm.find();
+        const savedFormData = await ArchaPointForm2.find();
         res.status(200).json(savedFormData);
     } catch (error) {
         console.error('Ошибка при получении данных:', error);

@@ -14,7 +14,7 @@ connect();
 app.use(express.json());
 app.use(bodyParser.json());
 
-// bot.launch();
+bot.launch();
 
 app.use('/', work_visa);
 app.use('/', ArchaPointForm);

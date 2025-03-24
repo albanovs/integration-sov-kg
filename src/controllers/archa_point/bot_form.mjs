@@ -2,14 +2,14 @@ import { Telegraf, Markup } from 'telegraf'
 import ArchaPointForm from '../../models/archa_point_form.mjs';
 import axios from 'axios';
 
-const bot = new Telegraf('7588829701:AAF6z5iQ0bD2_07ugUopRo0r_e3X7Fi3H1I');
+const bot = new Telegraf('8016391332:AAFvLv3Rd7EiPL7nC16MVpn3UlT3OSkb_wM');
 
 const userData = {};
 
 const sendToTelegram = async (name, phone, from, detail, postamat) => {
     const date = new Date();
     const formattedDate = date.toLocaleString();
-    const telegramBotToken = '7353979355:AAEANOLa4VLA399--RQ0R5vwZPL_NOveIj4';
+    const telegramBotToken = '8016391332:AAFvLv3Rd7EiPL7nC16MVpn3UlT3OSkb_wM';
     const chatId = '-1002410716808';
 
     const message = `
