@@ -21,6 +21,15 @@ const sendToTelegram = async (name, phone, recipient_number, detail, postamat) =
             chat_id: chatId,
             text: message,
         });
+        for (const fileObj of additionalFiles) {
+            if (fileObj.file) {
+                await axios.post(`https://api.telegram.org/bot${telegramBotToken}/sendDocument`, {
+                    chat_id: chatId,
+                    document: fileObj.file,
+                    caption: "Данные паспорта",
+                });
+            }
+        }
     } catch (error) {
         console.error('Ошибка при отправке сообщения в Telegram:', error);
     }
@@ -46,7 +55,7 @@ const saveFormData = async (req, res) => {
         });
 
         await newFormData.save();
-        await sendToTelegram(name, phone, recipient_number, detail, postamat);
+        await sendToTelegram(name, phone, recipient_number, detail, postamat, additionalFiles);
         res.status(201).json({ message: 'Данные успешно сохранены и отправлены в Telegram!' });
     } catch (error) {
         console.error('Ошибка при сохранении данных:', error);
