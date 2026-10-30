@@ -1,6 +1,5 @@
 import express from "express";
 import archa_controller from "../../controllers/work_visa/archa_point_form_controllers.mjs";
-import archa_controller2 from "../../controllers/work_visa/archa_point_form2_controllers.mjs";
 import multer from "multer";
 import path from "path";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
@@ -32,8 +31,6 @@ const upload = multer({
 
 router.post('/api/archasaveFormData', archa_controller.saveFormData);
 router.get('/api/archagetSavedFormData', archa_controller.getSavedFormData);
-router.post('/api/archasaveFormData2', upload.fields([{ name: 'additionalFiles' }]), archa_controller2.saveFormData);
-router.get('/api/archagetSavedFormData2', archa_controller2.getSavedFormData);
 
 
 export default router;
