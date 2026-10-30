@@ -7,6 +7,8 @@
   "scripts": {
     "start": "node index.js",
     "start:dev": "nodemon index.js",
+    "start:new-bot": "node telegram-form-bot.js",
+    "dev:new-bot": "node --watch telegram-form-bot.js",
     "build": "npm i"
   },
   "dependencies": {
