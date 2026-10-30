@@ -1,7 +1,6 @@
 import express from 'express';
 import { connect } from './db.js';
 import cors from 'cors';
-import work_visa from './src/router/work_visa/work_visa.mjs';
 import LoginModel from './src/models/login.mjs';
 import ArchaPointForm from './src/router/archa_point/archa_point_form.mjs';
 import { startTelegramFormBot } from './telegram-form-bot.js';
@@ -12,7 +11,6 @@ const PORT = '5000';
 connect();
 app.use(express.json());
 
-app.use('/', work_visa);
 app.use('/', ArchaPointForm);
 // app.use('/uploads', express.static('uploads'));
 app.post('/api/login', async (req, res) => {
